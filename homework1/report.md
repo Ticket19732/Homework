@@ -170,14 +170,12 @@ vector<vector<T>> result：儲存所有子集合。
 
 ```cpp
 #include <iostream>
-using namespace std;
-
-#include <iostream>
 #include <vector>
 using namespace std;
 
+// 泛型版本：可處理 int、string 或其它型別
 template<typename T>
-void generatePowerset(const vector<T>& S,
+void Powerset(const vector<T>& S,
                       int idx,
                       vector<T>& current,
                       vector<vector<T>>& result) {
@@ -185,30 +183,30 @@ void generatePowerset(const vector<T>& S,
         result.push_back(current);
         return;
     }
-    // 不選擇 S[idx]
-    generatePowerset(S, idx + 1, current, result);
 
-    // 選擇 S[idx]
+    Powerset(S, idx + 1, current, result);
+
+
     current.push_back(S[idx]);
-    generatePowerset(S, idx + 1, current, result);
+    Powerset(S, idx + 1, current, result);
     current.pop_back();
 }
 
 int main() {
     int n;
-    cout << "請輸入數字 n：";
+    cout << "請輸入集合元素個數 n：";
     cin >> n;
     vector<string> S(n);
-    cout << "依序輸入 " << n << " 個元素：\n";
+    cout << "請依序輸入 " << n << " 個元素（以空格分隔）：\n";
     for (int i = 0; i < n; i++) {
         cin >> S[i];
     }
 
     vector<vector<string>> powerset;
     vector<string> current;
-    generatePowerset(S, 0, current, powerset);
+    Powerset(S, 0, current, powerset);
 
-    cout << "此集合的冪集合有 " << powerset.size() << " 個子集合：\n";
+    cout << "該集合的冪集合共 " << powerset.size() << " 個子集合：\n";
     for (const auto& subset : powerset) {
         cout << "{";
         for (int i = 0; i < (int)subset.size(); i++) {
@@ -218,6 +216,7 @@ int main() {
     }
     return 0;
 }
+
 
 ```
 
@@ -237,7 +236,7 @@ int main() {
 ### 編譯與執行指令
 
 ```shell
-$ g++ -std=c++17 -o AckNR AckNR.cpp
+$ g++ -std=c++17 -o Powerset Powerset.cpp
 $ ./AckNR.exe
 {}
 {c}
