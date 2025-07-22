@@ -119,8 +119,18 @@ int main() {
 ```shell
 $ g++ -std=c++17 -o ackermann_recursive ackermann_recursive.cpp
 $ ./ackermann_recursive.exe
-Input m n: A(0,1) = 2
+Input m n: 2 3
+A(2,3) = 9   
 ```
+
+```shell
+$ g++ -std=c++17 -o AckNR AckNR.cpp
+$ ./AckNR.exe
+Input m n: 2 3
+A(2,3) = 9   
+```
+
+
 ## 申論及開發報告
 
 資料結構選擇
@@ -137,7 +147,7 @@ Input m n: A(0,1) = 2
 
  
 
-作業二:
+### 作業二:
 
 ### 問題描述
 
@@ -240,7 +250,7 @@ $ ./powerset
 
 ## 申論及開發報告
 
-實做時錯誤
+實做時的錯誤
 char subset[] = {} 輸出時用了字串""非''字元 導致型別不符
 
 遞迴天然適合樹狀狀態（每個元素二選一）。
