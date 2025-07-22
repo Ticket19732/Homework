@@ -97,13 +97,13 @@ int main() {
 
 遞迴版本：
 
-時間複雜度：O(A(m,n))，運算次數是指數成長
-空間複雜度：O(A(m,n))，會與最大的遞迴深度成正比
+時間複雜度：O(2ⁿ) =<3 的情況
+空間複雜度：O(2ⁿ) =<3 的情況
 
 非遞迴版本：
 
-時間複雜度：O(A(m,n))，跟遞迴一樣
-空間複雜度：O(A(m,n))，不受堆疊大小限制
+時間複雜度：O(2ⁿ) 跟遞迴一樣
+空間複雜度：O(2ⁿ)
 
 ### 測試與驗證
 
@@ -117,8 +117,9 @@ int main() {
 ### 編譯與執行指令
 
 ```shell
-$ g++ -std=c++17 -o main main.cpp
-$ ./main.exe
+$ g++ -std=c++17 -o recurison recurison.cpp
+$ ./recurison.exe
+Input m n: A(0,1) = 2
 ```
 ## 申論及開發報告
 
@@ -140,15 +141,30 @@ $ ./main.exe
 
 ### 問題描述
 
-如果 S 是一個有 n 個元素的集合，S 的冪集（powerset）是 S 所有可能子集的集合。例如，如果 S = {a,b,c}，則 powerset(S) = {{}, {a}, {b}, {c}, {a,b}, {a,c}, {b,c}, {a,b,c}}。請寫一個遞迴函數來計算這個冪集。
+Power set（冪集）：給定一個含 n 個元素的集合 S，其冪集 P(S) 為 S 的所有子集合
+
+題目要求撰寫遞迴函式，計算並列出冪集合
 
 ### 解題策略
-解法思路：
-1.從索引 0 開始，對每個元素：
-    不選它（不加入子集合）
-    選它（加入子集合）
-2.每次選完都遞迴往下一層走。
-3.遞迴到底時（已處理所有元素），將子集合輸出。
+遞迴（回溯）
+
+定義遞迴函式 generate(idx, current)：
+
+idx 表示目前考慮第 idx 個元素是否放入當前子集合 current。
+
+對每個元素做「選擇／不選擇」兩種決策：
+
+選擇：將 S[idx] 加到 current，再遞迴 idx+1。
+
+不選擇：跳過 S[idx]，直接遞迴 idx+1。
+
+當 idx == n 時，將 current 加入結果集。
+
+所需資料結構
+
+vector<T> current：暫存目前子集合。
+
+vector<vector<T>> result：儲存所有子集合。
 
 ### 程式實作
 
@@ -156,68 +172,81 @@ $ ./main.exe
 #include <iostream>
 using namespace std;
 
-// 遞迴函數用來生成集合 S 的冪集
-void generatePowerSet(int S[], int n, int index, int current[], int currentSize) 
-{
-  
-    if (index == n) 
-    {
-        cout << "{ ";
-        for (int i = 0; i < currentSize; ++i)
-          {
-            cout << current[i] << " ";
-        }
-        cout << "}" << endl;
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template<typename T>
+void generatePowerset(const vector<T>& S,
+                      int idx,
+                      vector<T>& current,
+                      vector<vector<T>>& result) {
+    if (idx == (int)S.size()) {
+        result.push_back(current);
         return;
     }
+    // 不選擇 S[idx]
+    generatePowerset(S, idx + 1, current, result);
 
-    // 選擇不包含當前元素的情況
-    generatePowerSet(S, n, index + 1, current, currentSize);
-
-    // 選擇包含當前元素的情況
-    current[currentSize] = S[index];
-    generatePowerSet(S, n, index + 1, current, currentSize + 1);
+    // 選擇 S[idx]
+    current.push_back(S[idx]);
+    generatePowerset(S, idx + 1, current, result);
+    current.pop_back();
 }
 
 int main() {
     int n;
-    cout << "輸入陣列大小: ";
+    cout << "請輸入數字 n：";
     cin >> n;
-
-    int S[n]; 
-    cout << "輸入鎮列內容: ";
-    for (int i = 0; i < n; ++i) {
+    vector<string> S(n);
+    cout << "依序輸入 " << n << " 個元素：\n";
+    for (int i = 0; i < n; i++) {
         cin >> S[i];
     }
 
-    int current[n]; // 保存當前子集的陣列
-    cout << "The power set is:\n";
-    
-    // 計算冪集
-    generatePowerSet(S, n, 0, current, 0);
+    vector<vector<string>> powerset;
+    vector<string> current;
+    generatePowerset(S, 0, current, powerset);
 
+    cout << "此集合的冪集合有 " << powerset.size() << " 個子集合：\n";
+    for (const auto& subset : powerset) {
+        cout << "{";
+        for (int i = 0; i < (int)subset.size(); i++) {
+            cout << subset[i] << (i + 1 < (int)subset.size() ? "," : "");
+        }
+        cout << "}\n";
+    }
     return 0;
 }
+
 ```
 
 ### 效能分析
 
-- 時間複雜度：
-對於長度為n的集合，每個元素有兩種選擇（選或不選）：O(2^n)。
-- 空間複雜度：O(n)。
+時間複雜度：O(2ⁿ)
+空間複雜度：O(2ⁿ)
 
+
+    
 ### 測試與驗證
 
 **測試案例：S = {a, b, c}**
 
 
-輸出：`{{}, {c}, {b}, {b,c}, {a}, {a,c}, {a,b}, {a,b,c}}`
 
 ### 編譯與執行指令
 
 ```shell
-$ g++ -std=c++17 -o main2 main2.cpp
+$ g++ -std=c++17 -o powerset2 powerset2.cpp
 $ ./main2.exe
+{}
+{c}
+{b}
+{b,c}
+{a}
+{a,c}
+{a,b}
+{a,b,c}
 ```
 
 ## 申論及開發報告
@@ -227,6 +256,3 @@ $ ./main2.exe
 3.這種結構具有清晰的決策樹（decision tree）結構，便於控制與理解。
 
 
-## 心得
-
-通過這次作業，主要理解了遞迴的核心概念，和陣列的熟悉度，並個別分析其複雜度，對於處理複雜演算法具有重要意義。
