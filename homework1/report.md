@@ -117,8 +117,8 @@ int main() {
 ### 編譯與執行指令
 
 ```shell
-$ g++ -std=c++17 -o recurison recurison.cpp
-$ ./recurison.exe
+$ g++ -std=c++17 -o ackermann_recursive ackermann_recursive.cpp
+$ ./ackermann_recursive.exe
 Input m n: A(0,1) = 2
 ```
 ## 申論及開發報告
@@ -146,7 +146,7 @@ Power set（冪集）：給定一個含 n 個元素的集合 S，其冪集
 題目要求撰寫遞迴函式，計算並列出冪集合
 
 ### 解題策略
-遞迴（回溯）
+遞迴
 
 定義遞迴函式 generate(idx, current)：
 
@@ -237,8 +237,8 @@ int main() {
 ### 編譯與執行指令
 
 ```shell
-$ g++ -std=c++17 -o powerset2 powerset2.cpp
-$ ./main2.exe
+$ g++ -std=c++17 -o AckNR AckNR.cpp
+$ ./AckNR.exe
 {}
 {c}
 {b}
