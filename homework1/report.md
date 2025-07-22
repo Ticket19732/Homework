@@ -24,8 +24,7 @@ $$
 當n=0 時，遞迴呼叫 A(m-1, 1)
 其他，遞迴呼叫 A(m-1, A(m, n-1))
 
-1	遞迴法：按照定義直接寫 int64_t Ack(m,n)
-2	非遞迴法：用 std::stack 模擬呼叫堆疊，手動展開遞迴。
+
 
 ## 程式實作
 
@@ -97,13 +96,13 @@ int main() {
 
 遞迴版本：
 
-時間複雜度：O(2ⁿ) =<3 的情況
-空間複雜度：O(2ⁿ) =<3 的情況
+時間複雜度：O(A(m, n))
+空間複雜度：O(A(m, n))
 
 非遞迴版本：
 
-時間複雜度：O(2ⁿ) 跟遞迴一樣
-空間複雜度：O(2ⁿ)
+時間複雜度：O(A(m, n))
+空間複雜度：O(A(m, n))
 
 ## 測試與驗證
 
@@ -157,53 +156,41 @@ Enter m and n: Ackermann(2, 3) = 9
 ## 解題策略
 使用遞迴方式來實作冪集合的計算。
 
-對於集合中的每個元素，有「包含」或「不包含」兩種選擇。
+對於集合中的每個元素，有包含或不包含兩種選擇。
 
 採用遞迴方式，從第 0 個元素開始決定是否納入子集合，最終組合出所有可能子集合。
 
-資料結構
-vector<T>：儲存輸入集合與中途子集合，方便重複存取與插入、移除尾端元素。
-
-遞迴呼叫堆疊：天然的深度優先搜尋，保留選取路徑的狀態。
    
 ## 程式實作
 
 ```cpp
+// powerset.cpp
 #include <iostream>
-using namespace std;
+#include <string>
 
-#define MAX_N 10 
-
-// 印出子集
-void print_subset(char subset[], int subset_size) {
-    cout << "{";
-    for (int i = 0; i < subset_size; ++i) {
-        cout << subset[i];
-        if (i < subset_size - 1) cout << ",";
-    }
-    cout << "}" << endl;
-}
-
-void powerset(char S[], int n, int idx, char subset[], int subset_size) {
-    if (idx == n) {
-        print_subset(subset, subset_size);
+void powerset(const std::string& S, int index, std::string current)
+{
+    if (index == static_cast<int>(S.size()))
+    {
+        std::cout << '(' << current << ")\n";
         return;
     }
-    // 不選 S[idx]
-    powerset(S, n, idx + 1, subset, subset_size);
-    // 選 S[idx]
-    subset[subset_size] = S[idx];
-    powerset(S, n, idx + 1, subset, subset_size + 1);
+
+    powerset(S, index + 1, current);
+
+    powerset(S, index + 1, current + S[index]);
 }
 
-int main() {
-    char S[MAX_N] = {'a', 'b', 'c'}; // 輸入集合
-    int n = 3;
-    char subset[MAX_N]; // 暫存子集
-    powerset(S, n, 0, subset, 0);
+int main()
+{
+    std::string S;                 //  "abc" 代表 {a,b,c}
+    std::cout << "Input set : ";
+    std::cin  >> S;
+
+    std::cout << "P(S) =\n";
+    powerset(S, 0, "");            
     return 0;
 }
-
 
 ```
 
@@ -218,44 +205,44 @@ int main() {
 
 輸入：
 
-S = {'a', 'b', 'c'}
+abc
 
 輸出：
-{}
-{c}
-{b}
-{b,c}
-{a}
-{a,c}
-{a,b}
-{a,b,c}
+P(S) =
+()
+(c)
+(b)
+(bc)
+(a)
+(ac)
+(ab)
+(abc)
 
 
 ### 編譯與執行指令
 
 ```shell
-$ g++ powerset.cpp -std=c++17 -o powerset       
+$ g++ powerset.cpp -std=c++17 -o powerset.cpp       
 $ ./powerset                                    
-{}
-{c}
-{b}
-{b,c}
-{a}
-{a,c}
-{a,b}
-{a,b,c}
+P(S) =
+()
+(c)
+(b)
+(bc)
+(a)
+(ac)
+(ab)
+(abc)
+
 ```
 
 ## 申論及開發報告
 
 實做時的錯誤
-char subset[] = {} 輸出時用了字串「""」非「''」字元 導致型別不符
 
 使用遞迴，程式邏輯能自然、直接對應到問題的數學式
 
-若呼叫層數不是天文數字，許多小型組合問題都能在能接受時間與空間資源內解決
-
-遞迴實作容易很直觀、，在問題規模不怎魔大時像本題，由於輸入元素不多，選擇遞迴能更加快速。
-
+實做時易發生的錯誤
+遞迴程式層次多，括號易漏；少一個 ;
 
 
