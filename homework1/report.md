@@ -4,25 +4,14 @@
 
 ## 解題說明
 
-Ackermann函數 A(m,n)
+本題要求實現一個遞迴函式，計算從 $1$ 到 $n$ 的連加總和。
 
-$$
-A(m,n) = \begin{cases}
-n + 1 & \text{if } m = 0 \\
-A(m-1, 1) & \text{if } n = 0 \\
-A(m-1, A(m, n-1)) & \text{otherwise}
-\end{cases}
-$$
+### 解題策略
 
-1.問題描述
-就算當 m 與 n 的值都很小時，這個函式的成長速度還是非常快
-寫出遞迴版本的程式碼計算
-再寫出非遞迴的演算法計算
-
-2.解題策略
-當 m=0 時，返回 n+1
-當n=0 時，遞迴呼叫 A(m-1, 1)
-
+1. 使用遞迴函式將問題拆解為更小的子問題：
+   $$\Sigma(n) = n + \Sigma(n-1)$$
+2. 當 $n \leq 1$ 時，返回 $n$ 作為遞迴的結束條件。  
+3. 主程式呼叫遞迴函式，並輸出計算結果。
 
 ## 程式實作
 
@@ -114,17 +103,16 @@ int main() {
 ## 編譯與執行指令
 
 ```shell
- if ($?) { g++ ackermann_recursive.cpp -o ackermann_recursive } ; if ($?) { .\ackermann_recursive }
-Enter m and n: 1 1
-Ackermann(1, 1) = 3
+$ g++ -std=c++17 -o sigma sigma.cpp
+$ ./sigma
+6
 ```
 
-```shell
-$ g++ -std=c++17 -o AckNR AckNR.cpp
-$ ./AckNR.exe
-Enter m and n: Ackermann(2, 3) = 9
-```
+### 結論
 
+1. 程式能正確計算 $n$ 到 $1$ 的連加總和。  
+2. 在 $n < 0$ 的情況下，程式會成功拋出異常，符合設計預期。  
+3. 測試案例涵蓋了多種邊界情況（$n = 0$、$n = 1$、$n > 1$、$n < 0$），驗證程式的正確性。
 
 ## 申論及開發報告
 
@@ -157,81 +145,18 @@ Enter m and n: Ackermann(2, 3) = 9
    
 ## 程式實作
 
-```cpp
-// powerset.cpp
-#include <iostream>
-#include <string>
+   ```cpp
+   int sigma(int n) {
+       if (n < 0)
+           throw "n < 0";
+       else if (n <= 1)
+           return n;
+       return n + sigma(n - 1);
+   }
+   ```
 
-void powerset(const std::string& S, int index, std::string current)
-{
-    if (index == static_cast<int>(S.size()))
-    {
-        std::cout << '(' << current << ")\n";
-        return;
-    }
+3. **遞迴的語意清楚**  
+   在程式中，每次遞迴呼叫都代表一個「子問題的解」，而最終遞迴的返回結果會逐層相加，完成整體問題的求解。  
+   這種設計簡化了邏輯，不需要額外變數來維護中間狀態。
 
-    powerset(S, index + 1, current);
-
-    powerset(S, index + 1, current + S[index]);
-}
-
-int main()
-{
-    std::string S;                 //  "abc" 代表 {a,b,c}
-    std::cout << "Input set : ";
-    std::cin  >> S;
-
-    std::cout << "P(S) =\n";
-    powerset(S, 0, "");            
-    return 0;
-}
-
-```
-
-## 效能分析
-
-時間複雜度：O(2ⁿ)
-空間複雜度：O(2ⁿ)
-
-
-    
-## 測試與驗證
-
-輸入：
-
-abc
-
-輸出：
-P(S) =
-()
-(c)
-(b)
-(bc)
-(a)
-(ac)
-(ab)
-(abc)
-
-
-### 編譯與執行指令
-
-```shell
-$ g++ powerset.cpp -std=c++17 -o powerset.cpp       
-$ ./powerset                                    
-P(S) =
-()
-(c)
-(b)
-(bc)
-(a)
-(ac)
-(ab)
-(abc)
-
-```
-
-## 申論及開發報告
-
-實做時的錯誤
-
-使用遞迴，程式邏輯能自然、直接對應到問題的數學式
+透過遞迴實作 Sigma 計算，程式邏輯簡單且易於理解，特別適合展示遞迴的核心思想。然而，遞迴會因堆疊深度受到限制，當 $n$ 值過大時，應考慮使用迭代版本來避免 Stack Overflow 問題。
