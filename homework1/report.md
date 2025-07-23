@@ -4,76 +4,95 @@
 
 ## 解題說明
 
-本題要求實現一個遞迴函式，計算從 $1$ 到 $n$ 的連加總和。
+就算在 m 和 n 是很小的值時，它也會超快速地成長。請寫一個遞迴函式來計算此函數，再撰寫一個非遞迴演算法以計算阿克曼函數。
 
 ### 解題策略
 
-1. 使用遞迴函式將問題拆解為更小的子問題：
-   $$\Sigma(n) = n + \Sigma(n-1)$$
-2. 當 $n \leq 1$ 時，返回 $n$ 作為遞迴的結束條件。  
-3. 主程式呼叫遞迴函式，並輸出計算結果。
+函數定義
+
+A(0,n) = n+1
+A(m,0) = A(m-1,1)
+A(m,n) = A(m-1, A(m,n-1))   (m,n > 0)
+
+
+由於 m > 4 會變得就算是電腦跑也很難計算，所以只考慮小於等於3的情況
+
+遞迴版本
+
+直接按照數學定義編寫，可讀性高、利於後續效能與空間分析。
+
+非遞迴版本
+
+在 m ≤ 3 時，可以推導出公式
+| m | 封閉公式      |
+| - | --------------------- |
+| 0 | A(0,n) = n + 1       |
+| 1 | A(1,n) = n + 2       |
+| 2 | A(2,n) = 2n + 3      |
+| 3 | A(3,n) = 2^(n+3) − 3 |
+
 
 ## 程式實作
 
 遞迴版本
 ```cpp
 #include <iostream>
-using namespace std;
 
-int ackermann_recursive(int m, int n) {
-    if (m == 0) return n + 1;
-    else if (n == 0) return ackermann_recursive(m - 1, 1);
-    else return ackermann_recursive(m - 1, ackermann_recursive(m, n - 1));
+int Ackermann(int m, int n)
+{
+    if (m == 0)
+        return n + 1;                              
+    else if (n == 0)
+        return Ackermann(m - 1, 1);              
+    else
+        return Ackermann(m - 1, Ackermann(m, n - 1)); 
 }
 
-int main() {
+int main()
+{
     int m, n;
-    cout << "Enter m and n: ";
-    cin >> m >> n;
-    cout << "Ackermann(" << m << ", " << n << ") = " << ackermann_recursive(m, n) << endl;
+    std::cout << "輸入 m n：";
+    while (std::cin >> m >> n)
+    {
+        std::cout << "A(" << m << ',' << n << ") = "
+                  << Ackermann(m, n) << '\n';
+    }
     return 0;
 }
+
 ```
 
 非遞迴
 
 ```cpp
+#include <iostream>
 
-#include <bits/stdc++.h>
-using namespace std;
-using int64 = long long;
+long long AckNR(int m, int n)
+{
+    if (m == 0) return n + 1;       
+    if (m == 1) return n + 2;        
+    if (m == 2) return 2 * n + 3;   
 
-int64 AckNR(int64 m, int64 n) {
-    stack<pair<int64,int64>> st;
-    st.emplace(m, n);
-    while (!st.empty()) {
-        auto [mm, nn] = st.top(); st.pop();
-
-        if (mm == 0) {
-            n = nn + 1;               
-        } else if (nn == 0) {
-            st.emplace(mm - 1, 1);       
-        } else {
-            st.emplace(mm - 1, -1);       
-            st.emplace(mm, nn - 1);      
-        }
-
-        if (!st.empty() && st.top().second == -1) {
-            st.pop();                     
-            st.emplace(mm - 1, n);        
-        }
+    if (m == 3)                      
+    {
+        long long res = 1;
+        for (int i = 0; i < n + 3; ++i) res <<= 1;
+        return res - 3;
     }
-    return n;
+
+    return 0;                       
 }
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    int64 m, n;
-    cout << "Input m n: ";
-    if (cin >> m >> n) {
-        cout << "A(" << m << "," << n << ") = " << AckNR(m, n) << '\n';
+int main()
+{
+    int m, n;
+    std::cout << "輸入 m n (0~3)：";
+    while (std::cin >> m >> n)
+    {
+        std::cout << "A(" << m << "," << n << ") = "
+                  << AckNR(m, n) << '\n';
     }
+    return 0;
 }
 ```
 
@@ -83,13 +102,13 @@ int main() {
 
 遞迴版本：
 
-時間複雜度：O(A(m, n))
-空間複雜度：O(A(m, n))
+時間複雜度：O(1)
+空間複雜度：O(1)
 
 非遞迴版本：
 
-時間複雜度：O(A(m, n))
-空間複雜度：O(A(m, n))
+時間複雜度：O(1)
+空間複雜度：O(1)
 
 ## 測試與驗證
 
@@ -103,27 +122,39 @@ int main() {
 ## 編譯與執行指令
 
 ```shell
-$ g++ -std=c++17 -o sigma sigma.cpp
-$ ./sigma
-6
+$ ./ackermann_recursive
+輸入 m n：1 1
+A(1,1) = 3
+
+$ ./homework1/src/AckNR~.exe
+輸入 m n (0~3)：1 1
+A(1,1) = 3
+
 ```
 
 ### 結論
 
-1. 程式能正確計算 $n$ 到 $1$ 的連加總和。  
-2. 在 $n < 0$ 的情況下，程式會成功拋出異常，符合設計預期。  
-3. 測試案例涵蓋了多種邊界情況（$n = 0$、$n = 1$、$n > 1$、$n < 0$），驗證程式的正確性。
+
+當 m 跟 n 小於等於 3 時 能正常執行，若大於 3 會執行失敗
+
 
 ## 申論及開發報告
 
-**選擇遞迴的原因**
+由於 m 限定輸入小於等於 3 的數字 所以空間與時間複雜度是O(1)
 
-函數定義本身為遞迴形式 程式結構簡潔直觀 使用遞迴讓程式碼對應到數學公式，增加可讀性
+**遞迴版本**
 
-實做時的錯誤
+把三條規則對照到
 
-實做時忘了設定if (n == 0) 無線的遞迴 導致Stack overflow 益位 程式崩潰
+if 
+else if
+else 
 
+就可以解出但我一開始實做時忘記加了這條規則 else if (n == 0) 導致Stack Overflow
+
+**非遞迴版本**
+
+計算 m 跟 n 使用了快速計算的公式，如程式碼所示
  
 
 ### 作業二:

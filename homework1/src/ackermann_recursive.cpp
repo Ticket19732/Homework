@@ -1,16 +1,23 @@
 #include <iostream>
-using namespace std;
 
-int ackermann_recursive(int m, int n) {
-    if (m == 0) return n + 1;
-    else if (n == 0) return ackermann_recursive(m - 1, 1);
-    else return ackermann_recursive(m - 1, ackermann_recursive(m, n - 1));
+int Ackermann(int m, int n)
+{
+    if (m == 0)
+        return n + 1;                              
+    else if (n == 0)
+        return Ackermann(m - 1, 1);              
+    else
+        return Ackermann(m - 1, Ackermann(m, n - 1)); 
 }
 
-int main() {
+int main()
+{
     int m, n;
-    cout << "Enter m and n: ";
-    cin >> m >> n;
-    cout << "Ackermann(" << m << ", " << n << ") = " << ackermann_recursive(m, n) << endl;
+    std::cout << "¿é¤J m n¡G";
+    while (std::cin >> m >> n)
+    {
+        std::cout << "A(" << m << ',' << n << ") = "
+                  << Ackermann(m, n) << '\n';
+    }
     return 0;
 }

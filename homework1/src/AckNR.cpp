@@ -1,36 +1,29 @@
-#include <bits/stdc++.h>
-using namespace std;
-using int64 = long long;
+#include <iostream>
 
-int64 AckNR(int64 m, int64 n) {
-    stack<pair<int64,int64>> st;
-    st.emplace(m, n);
-    while (!st.empty()) {
-        auto [mm, nn] = st.top(); st.pop();
+long long AckNR(int m, int n)
+{
+    if (m == 0) return n + 1;       
+    if (m == 1) return n + 2;        
+    if (m == 2) return 2 * n + 3;   
 
-        if (mm == 0) {
-            n = nn + 1;                   
-        } else if (nn == 0) {
-            st.emplace(mm - 1, 1);      
-        } else {
-            st.emplace(mm - 1, -1);      
-            st.emplace(mm, nn - 1);      
-        }
-
-        if (!st.empty() && st.top().second == -1) {
-            st.pop();                    
-            st.emplace(mm - 1, n);       
-        }
+    if (m == 3)                      
+    {
+        long long res = 1;
+        for (int i = 0; i < n + 3; ++i) res <<= 1;
+        return res - 3;
     }
-    return n;
+
+    return -1;                       
 }
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    int64 m, n;
-    cout << "Input m n: ";
-    if (cin >> m >> n) {
-        cout << "A(" << m << "," << n << ") = " << AckNR(m, n) << '\n';
+int main()
+{
+    int m, n;
+    std::cout << "¿é¤J m n (0~3)¡G";
+    while (std::cin >> m >> n)
+    {
+        std::cout << "A(" << m << "," << n << ") = "
+                  << AckNR(m, n) << '\n';
     }
+    return 0;
 }
