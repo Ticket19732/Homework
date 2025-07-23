@@ -146,9 +146,7 @@ A(1,1) = 3
 
 把三條規則對照到
 
-if 
-else if
-else 
+if <br> els if <br> else 
 
 就可以解出但我一開始實做時忘記加了這條規則 else if (n == 0) 導致Stack Overflow
 
