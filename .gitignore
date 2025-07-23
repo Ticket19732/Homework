@@ -1,0 +1,14 @@
+# －－ 編譯與執行檔 －－
+*.o
+*.obj
+*.exe
+*.out
+
+# －－ 依 IDE / OS 調整 －－
+.vscode/
+.DS_Store
+Thumbs.db
+
+# －－ 其他暫存檔 / 測試輸出 －－
+*.log
+*.tmp
