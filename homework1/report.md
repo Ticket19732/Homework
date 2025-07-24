@@ -224,7 +224,7 @@ int main()
 
 ```shell
 $ ./homework1/src/Powerset
-$ 請輸入集合（例如 abc）：abc
+$ 請輸入集合：abc
 powerset(abc)：
 ()
 (c)
