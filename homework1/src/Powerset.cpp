@@ -1,46 +1,28 @@
 #include <iostream>
-#include <vector>
-using namespace std;
+#include <string>
 
-template<typename T>
-void Powerset(const vector<T>& S,
-                      int idx,
-                      vector<T>& current,
-                      vector<vector<T>>& result) {
-    if (idx == (int)S.size()) {
-        result.push_back(current);
+void PowerSet(const std::string& S, int idx, const std::string& current)
+{
+    int n = S.length();
+
+    if (idx == n)               
+    {
+        std::cout << '(' << current << ")\n";
         return;
     }
 
-    Powerset(S, idx + 1, current, result);
-
-
-    current.push_back(S[idx]);
-    Powerset(S, idx + 1, current, result);
-    current.pop_back();
+    PowerSet(S, idx + 1, current);      
+    PowerSet(S, idx + 1, current + S[idx]); 
 }
 
-int main() {
-    int n;
-    cout << "請輸入集合元素個數 n：";
-    cin >> n;
-    vector<string> S(n);
-    cout << "請依序輸入 " << n << " 個元素：\n";
-    for (int i = 0; i < n; i++) {
-        cin >> S[i];
-    }
-
-    vector<vector<string>> powerset;
-    vector<string> current;
-    Powerset(S, 0, current, powerset);
-
-    cout << "該集合的冪集合共 " << powerset.size() << " 個子集合：\n";
-    for (const auto& subset : powerset) {
-        cout << "{";
-        for (int i = 0; i < (int)subset.size(); i++) {
-            cout << subset[i] << (i + 1 < (int)subset.size() ? "," : "");
-        }
-        cout << "}\n";
+int main()
+{
+    std::string S;
+    std::cout << "�п�J���X�G";
+    if (std::cin >> S)                  
+    {
+        std::cout << "powerset(" << S << ")�G\n";
+        PowerSet(S, 0, "");
     }
     return 0;
 }
