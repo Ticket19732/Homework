@@ -223,7 +223,8 @@ int main()
 ## 編譯與執行指令
 
 ```shell
-$ 請輸入集合（例如 abc）：abc
+$ ./homework1/src/Powerset
+$ 請輸入集合：abc
 powerset(abc)：
 ()
 (c)
