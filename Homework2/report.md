@@ -155,20 +155,6 @@ p1 * p2 = 2x^3 + -7x^2 + -1x^1 + -12
 
 開發時的錯誤：
 
-```cpp
-c.n=a.n+b.n;
-for(int i=0;i<a.n;i++) c.t[i]=a.t[i];
-```
-
-未合併同次方。② 乘法僅
-複製
-編輯
-if(k<c.n) c.t[k].c+=newC;
-漏 else 新增，導致遺失項。③ Eval 用 int s=0; 精度不足。④ 未檢查 n>MAX 造成越界。⑤ 忘寫解構子 ~Poly(){delete[] t;} 產生記憶體洩漏。
-
-
-c.n=a.n+b.n;
-for(int i=0;i<a.n;i++) c.t[i]=a.t[i];
 未合併同次方。乘法僅
 if(k<c.n) c.t[k].c+=newC;
-漏掉 else 新增，導致遺失項，忘寫解構子 ~Poly(){delete[] t;} 產生記憶體洩漏。
+漏掉了 else 新增，導致遺失項;忘寫解構子 ~Poly(){delete[] t;} 產生記憶體洩漏。
